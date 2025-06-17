@@ -35,9 +35,11 @@ class UserFetchUsecase(
      */
     @Deprecated("дедлайн был ночь, я такое осуждаю.. стыдно")
     fun allUsers(): Uni<List<User>> =
-        repository.findAll(page(1000, 0)).map {
-            it.mapNotNull(UserEntity::toUser)
-        }
+        repository.findAll(page(1000, 0))
+            .flatMap(this::getAvatar)
+            .map {
+                it.mapNotNull { it.toUser(false) }
+            }
 
     /**
      * Поиск пользователей

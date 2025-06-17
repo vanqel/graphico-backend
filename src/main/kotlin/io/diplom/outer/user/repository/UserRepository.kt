@@ -2,7 +2,6 @@ package io.diplom.outer.user.repository
 
 import io.diplom.outer.user.models.UserEntity
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
-import io.quarkus.hibernate.reactive.panache.kotlin.PanacheRepository
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import org.hibernate.query.Page
@@ -11,7 +10,7 @@ import org.hibernate.reactive.mutiny.Mutiny
 @ApplicationScoped
 class UserRepository(
     val entityManager: Mutiny.SessionFactory,
-    val personRepo: PanacheRepository<UserEntity>,
+    val personRepo: UserPhotoRepositoryPanache,
 ) {
 
     /**
@@ -104,12 +103,8 @@ class UserRepository(
      * Проверка на существование пользователя по параметрам
      */
     @WithTransaction
-    fun blockUnblockUser(id: Long): Uni<Boolean> = entityManager.withTransaction { session ->
-        session.createQuery(
-            "update UserEntity u set u.isBlocked = (not u.isBlocked) where id = :id",
-            Int::class.java
-        ).setParameter("id", id)
-            .singleResult
-    }.map { it > 0 }
+    fun blockUnblockUser(id: Long): Uni<Boolean> =
+        personRepo.update("set isBlocked = (not isBlocked) where id = :id", id)
+            .map { true }
 
 }

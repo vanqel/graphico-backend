@@ -39,7 +39,7 @@ class UserStateUsecase(
         if (!securityIdentity.getUser().hasAuthority(AuthorityName.ADMIN)) {
             throw AuthException("Нет прав")
         }
-        return repository.update("SET u.isBlocked = (not u.isBlocked) where id = ?1", id)
+        return repository.update("SET isBlocked = (not isBlocked) where id = ?1", id)
             .map { it > 0 }
     }
 

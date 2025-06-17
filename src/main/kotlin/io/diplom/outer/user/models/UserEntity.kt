@@ -99,9 +99,9 @@ class UserEntity(
     @JoinColumn(name = "uid_id", referencedColumnName = "id")
     val roles: List<UserRoles> = emptyList()
 
-    fun toUser(): User {
+    fun toUser(validate: Boolean = true): User {
 
-        if (isBlocked || !isApproved) throw AuthException("Вход не возможен")
+        if (validate && (isBlocked || !isApproved)) throw AuthException("Вход не возможен")
 
         return User(
             id = id!!,
@@ -119,9 +119,9 @@ class UserEntity(
         )
     }
 
-    fun toUser(uri: String): User {
+    fun toUser(uri: String, validate: Boolean = true): User {
 
-        if (isBlocked || !isApproved) throw AuthException("Вход не возможен")
+        if (validate && (isBlocked || !isApproved)) throw AuthException("Вход не возможен")
 
         return User(
             id = id!!,

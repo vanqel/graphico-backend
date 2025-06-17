@@ -57,6 +57,12 @@ class WorkEntity(
     }
 
     enum class Category(val text: String) {
-        `graphic-design`("Графические рисунки"), `3d-models`("3д-модели"), photos("Фотографии")
+        `3d-models`("3д-модели"),
+        `graphic-design`("Графические рисунки"),
+        `logos`("Логотипы"),
+        `web-design`("Веб-дизайн"),
+        `interior-design`("Дизайн интерьера"),
+        `animations`("Анимации"),
+        `print-design`("Принт-дизайн"),
     }
 }
