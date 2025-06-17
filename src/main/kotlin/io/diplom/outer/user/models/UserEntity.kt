@@ -60,7 +60,7 @@ class UserEntity(
      * Скиллы пользователя
      */
     @Column(name = "directions")
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     var directions: List<String> = emptyList(),
 
     /**
