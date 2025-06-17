@@ -1,7 +1,6 @@
 package io.diplom.auth.api.http
 
 import io.diplom.auth.dto.inp.UserUpdateInput
-import io.diplom.auth.service.UserService
 import io.diplom.auth.usecase.UserUpdateUsecase
 import io.diplom.common.security.configurator.getUser
 import io.diplom.common.security.models.AuthorityName
@@ -21,7 +20,6 @@ import jakarta.ws.rs.core.MediaType
 @ApplicationScoped
 @RouteBase(path = "/user")
 class UserApi(
-    val userService: UserService,
     val updateUsecase: UserUpdateUsecase
 ) {
 

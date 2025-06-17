@@ -1,9 +1,6 @@
 package io.diplom.auth.api.http
 
-import io.diplom.auth.service.UserService
-import io.diplom.auth.usecase.UserFetchUsecase
 import io.diplom.auth.usecase.UserStateUsecase
-import io.diplom.works.usecase.WorkStatusUsecase
 import io.quarkus.vertx.web.Param
 import io.quarkus.vertx.web.Route
 import io.quarkus.vertx.web.RouteBase

@@ -1,6 +1,5 @@
 package io.diplom.common.security.models
 
-import jakarta.persistence.Column
 import java.security.Principal
 import java.time.LocalDateTime
 

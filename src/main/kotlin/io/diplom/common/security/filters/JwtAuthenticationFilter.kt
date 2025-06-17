@@ -2,7 +2,6 @@ package io.diplom.common.security.filters
 
 import io.diplom.auth.service.JwtProvider
 import io.diplom.auth.service.JwtProvider.Companion.PREFIX_VALUE
-import io.diplom.auth.service.UserService
 import io.diplom.auth.usecase.UserAuthUsecase
 import io.diplom.common.security.configurator.AuthenticationFilter
 import io.diplom.common.security.models.User

@@ -2,7 +2,6 @@ package io.diplom.auth.api.http
 
 import io.diplom.auth.dto.inp.LoginInput
 import io.diplom.auth.dto.inp.UserRegisterInput
-import io.diplom.auth.service.UserService
 import io.diplom.auth.usecase.UserAuthUsecase
 import io.diplom.auth.usecase.UserRegisterUsecase
 import io.quarkus.vertx.web.Body

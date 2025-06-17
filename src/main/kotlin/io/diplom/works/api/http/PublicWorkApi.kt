@@ -7,7 +7,6 @@ import io.quarkus.vertx.web.Route
 import io.quarkus.vertx.web.RouteBase
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.core.MediaType
 
 @ApplicationScoped

@@ -8,7 +8,6 @@ import io.diplom.extension.pagination
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.PersistenceContext
-import jakarta.transaction.Transactional
 import org.hibernate.reactive.mutiny.Mutiny
 
 /**
