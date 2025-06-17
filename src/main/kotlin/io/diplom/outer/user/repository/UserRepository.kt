@@ -61,7 +61,6 @@ class UserRepository(
                 UserEntity::class.java
             ).setParameter("username", payload)
                 .setParameter("email", payload)
-                .setParameter("phone", payload)
                 .singleResultOrNull
         }
 
