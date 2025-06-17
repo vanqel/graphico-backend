@@ -57,7 +57,7 @@ class UserRepository(
     fun findByParams(payload: String): Uni<UserEntity?> =
         entityManager.withSession { session ->
             session.createQuery(
-                "select u from UserEntity u join fetch u.roles r where u.username = :username or u.email = :email or u.phone = :phone",
+                "select u from UserEntity u join fetch u.roles r where u.username = :username or u.email = :email",
                 UserEntity::class.java
             ).setParameter("username", payload)
                 .setParameter("email", payload)
