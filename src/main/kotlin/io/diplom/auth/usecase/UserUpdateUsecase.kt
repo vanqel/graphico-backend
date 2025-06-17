@@ -15,6 +15,7 @@ import io.smallrye.mutiny.Uni
 import io.vertx.ext.web.FileUpload
 import jakarta.enterprise.context.ApplicationScoped
 
+@WithTransaction
 @ApplicationScoped
 class UserUpdateUsecase(
     private val userRepository: UserRepositoryPanache,

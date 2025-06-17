@@ -6,12 +6,14 @@ import io.diplom.outer.images.MinioService
 import io.diplom.outer.user.models.UserEntity
 import io.diplom.outer.user.repository.UserRepository
 import io.diplom.outer.user.repository.UserRepositoryPanache
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
 import org.hibernate.query.Page
 import org.hibernate.query.Page.page
 
+@WithTransaction
 @ApplicationScoped
 class UserFetchUsecase(
     private val repository: UserRepository,

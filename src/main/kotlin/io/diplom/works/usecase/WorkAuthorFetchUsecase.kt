@@ -4,8 +4,10 @@ import io.diplom.auth.usecase.UserFetchUsecase
 import io.diplom.common.security.models.User
 import io.diplom.works.dto.out.UserWorksOutputDTO
 import io.diplom.works.models.WorkEntity
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import jakarta.enterprise.context.ApplicationScoped
 
+@WithTransaction
 @ApplicationScoped
 class WorkAuthorFetchUsecase(
     val workFetchUsecase: WorkFetchUsecase,

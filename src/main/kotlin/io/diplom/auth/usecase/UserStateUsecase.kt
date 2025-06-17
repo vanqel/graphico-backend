@@ -10,6 +10,7 @@ import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 
+@WithTransaction
 @ApplicationScoped
 class UserStateUsecase(
     private val repository: UserRepositoryPanache

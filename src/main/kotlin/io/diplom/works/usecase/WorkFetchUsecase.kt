@@ -4,14 +4,19 @@ import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.querymodel.jpql.entity.Entities.entity
 import io.diplom.config.jpql.JpqlEntityManager
 import io.diplom.config.jpql.PaginationInput
+import io.diplom.exception.GeneralException
 import io.diplom.outer.images.FileOutput
 import io.diplom.outer.images.MinioService
 import io.diplom.works.models.WorkEntity
 import io.diplom.works.repository.WorkRepository
+import io.quarkus.hibernate.reactive.panache.common.WithSession
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
+import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
+@WithTransaction
 class WorkFetchUsecase(
     private val workRepository: WorkRepository,
     private val fileService: MinioService,
@@ -112,6 +117,9 @@ class WorkFetchUsecase(
                 ph.id!! to it
             }
         }
+
+        if (unis.isEmpty())
+            throw GeneralException("Список работ пустой")
 
         return Uni.combine().all().unis<Pair<Long, FileOutput>>(unis)
             .with { (it as List<Pair<Long, FileOutput>>).toMap() }

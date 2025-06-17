@@ -8,10 +8,12 @@ import io.diplom.config.jpql.JpqlEntityManager
 import io.diplom.config.jpql.PaginationInput
 import io.diplom.works.models.WorkEntity
 import io.diplom.works.usecase.WorkFetchUsecase
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.security.identity.SecurityIdentity
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 
+@WithTransaction
 @ApplicationScoped
 class CartFetchUsecase(
     private val workFetchUsecase: WorkFetchUsecase,

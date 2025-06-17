@@ -4,10 +4,12 @@ import io.diplom.cart.dto.inp.CartInput
 import io.diplom.cart.model.CartEntity
 import io.diplom.cart.repository.CartPanacheRepository
 import io.diplom.common.security.configurator.getUser
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.security.identity.SecurityIdentity
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 
+@WithTransaction
 @ApplicationScoped
 class CartAddUsecase(
     private val cartRepository: CartPanacheRepository,

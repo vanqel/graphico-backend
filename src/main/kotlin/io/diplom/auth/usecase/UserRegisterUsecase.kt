@@ -14,6 +14,7 @@ import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.transaction.Transactional
 
+@WithTransaction
 @ApplicationScoped
 class UserRegisterUsecase(
     private val repository: UserRepository

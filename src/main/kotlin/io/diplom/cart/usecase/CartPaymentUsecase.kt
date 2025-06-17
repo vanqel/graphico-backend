@@ -4,11 +4,13 @@ import io.diplom.cart.model.CartEntity
 import io.diplom.cart.repository.CartPanacheRepository
 import io.diplom.common.security.configurator.getUser
 import io.diplom.exception.AuthException
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.security.identity.SecurityIdentity
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
 
+@WithTransaction
 @ApplicationScoped
 class CartPaymentUsecase(
     private val cartRepository: CartPanacheRepository,

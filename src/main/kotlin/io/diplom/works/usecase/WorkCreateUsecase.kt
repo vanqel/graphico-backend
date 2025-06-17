@@ -10,11 +10,13 @@ import io.diplom.works.dto.inp.AttachImagesWorkDTO
 import io.diplom.works.dto.inp.CreateWorkDTO
 import io.diplom.works.models.WorkEntity
 import io.diplom.works.models.WorkPhotoEntity
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.security.identity.SecurityIdentity
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
 
+@WithTransaction
 @ApplicationScoped
 class WorkCreateUsecase(
     private val jpqlEntityManager: JpqlEntityManager,

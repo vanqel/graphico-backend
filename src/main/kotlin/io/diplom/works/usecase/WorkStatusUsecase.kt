@@ -6,11 +6,13 @@ import io.diplom.config.jpql.JpqlEntityManager
 import io.diplom.exception.AuthException
 import io.diplom.works.dto.inp.ChangeStatusWorkDTO
 import io.diplom.works.models.WorkEntity
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.security.identity.SecurityIdentity
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
 
+@WithTransaction
 @ApplicationScoped
 class WorkStatusUsecase(
     private val jpqlEntityManager: JpqlEntityManager,

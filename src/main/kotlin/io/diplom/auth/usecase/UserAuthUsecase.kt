@@ -16,6 +16,7 @@ import io.smallrye.mutiny.uni
 import io.vertx.ext.web.RoutingContext
 import jakarta.enterprise.context.ApplicationScoped
 
+@WithTransaction
 @ApplicationScoped
 class UserAuthUsecase(
     private val jwtProvider: JwtProvider,
