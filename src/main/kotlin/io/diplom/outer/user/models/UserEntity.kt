@@ -100,7 +100,7 @@ class UserEntity(
 
     fun toUser(): User {
 
-        if (isBlocked || isApproved) throw AuthException("Вход не возможен")
+        if (isBlocked || !isApproved) throw AuthException("Вход не возможен")
 
         return User(
             id = id!!,
@@ -120,7 +120,7 @@ class UserEntity(
 
     fun toUser(uri: String): User {
 
-        if (isBlocked || isApproved) throw AuthException("Вход не возможен")
+        if (isBlocked || !isApproved) throw AuthException("Вход не возможен")
 
         return User(
             id = id!!,
