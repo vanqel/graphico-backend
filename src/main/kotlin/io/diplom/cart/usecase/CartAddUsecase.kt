@@ -22,7 +22,6 @@ class CartAddUsecase(
             securityIdentity.getUser().id,
             input.workId,
             CartEntity.Status.IN_CART,
-            input.donat
         )
 
         return cartRepository.persistAndFlush(entity)

@@ -63,6 +63,20 @@ class WorkFetchUsecase(
         return jpqlEntityManager.JpqlQuery().getResultData(query, PaginationInput(0, 100)).flatMap(this::wrap)
     }
 
+
+    @Deprecated("дедлайн был ночь, я такое осуждаю.. стыдно")
+    fun findByStyle(style: String): Uni<List<WorkEntity>> {
+        val query = jpql {
+            selectDistinct(entity).from(entity).where(
+                entity
+                    .path(WorkEntity::style)
+                    .eq(value(style))
+            )
+        }
+
+        return jpqlEntityManager.JpqlQuery().getResultData(query, PaginationInput(0, 100)).flatMap(this::wrap)
+    }
+
     fun findByUser(userId: Long): Uni<List<WorkEntity>> {
         val query = jpql {
             selectDistinct(entity).from(entity).where(

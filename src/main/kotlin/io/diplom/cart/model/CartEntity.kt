@@ -10,7 +10,6 @@ class CartEntity(
     val userId: Long? = null,
     val workId: Long? = null,
     var status: Status? = null,
-    val donat: Double? = null
 ): LongEntity() {
     enum class Status {
         IN_CART, PAYMENT, DECLINE

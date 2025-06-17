@@ -34,15 +34,24 @@ class WorkEntity(
 
     @Column(name = "category")
     @Enumerated(EnumType.STRING)
-    val category: Category? = null
+    val category: Category? = null,
 
-) : LongEntity(){
 
-    enum class Status (val text: String){
+    @Column(name = "price")
+    val price: Double? = null,
+
+
+    @Column(name = "style")
+    val style: String? = null
+
+
+) : LongEntity() {
+
+    enum class Status(val text: String) {
         DONE("Готово"), IN_WORK("В работе"), CANCEL("Отменён")
     }
 
-    enum class Category (val text: String){
+    enum class Category(val text: String) {
         `graphic-design`("Графические рисунки"), `3d-models`("3д-модели"), photos("Фотографии")
     }
 }

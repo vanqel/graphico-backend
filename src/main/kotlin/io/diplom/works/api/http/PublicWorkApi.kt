@@ -1,5 +1,6 @@
 package io.diplom.works.api.http
 
+import com.cronutils.model.field.value.SpecialChar
 import io.diplom.works.models.WorkEntity
 import io.diplom.works.usecase.WorkFetchUsecase
 import io.quarkus.vertx.web.Param
@@ -40,12 +41,23 @@ class PublicWorkApi(
     ): Uni<List<WorkEntity>> = workFetchUsecase.findByUser(id!!)
 
     @Route(
-        path = "category/{category}",
+        path = "category",
         methods = [Route.HttpMethod.GET],
         produces = [MediaType.APPLICATION_JSON]
     )
-    fun getAllWorksByDirection(
-        @Param("category") category: String?
+    fun getAllWorksByCategory(
+        @Param("search") category: String?
     ): Uni<List<WorkEntity>> = workFetchUsecase.findByCategory(WorkEntity.Category.valueOf(category!!))
+
+
+
+    @Route(
+        path = "style",
+        methods = [Route.HttpMethod.GET],
+        produces = [MediaType.APPLICATION_JSON]
+    )
+    fun getAllWorksByStyle(
+        @Param("search") style: String?
+    ): Uni<List<WorkEntity>> = workFetchUsecase.findByStyle(style!!)
 
 }

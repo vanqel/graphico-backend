@@ -32,7 +32,9 @@ class WorkCreateUsecase(
             input.about,
             mutableListOf(),
             WorkEntity.Status.IN_WORK,
-            input.category
+            input.category,
+            input.price,
+            input.style
         )
 
         return jpqlEntityManager.save(entity)
