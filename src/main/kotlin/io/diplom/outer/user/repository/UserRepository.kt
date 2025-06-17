@@ -28,6 +28,27 @@ class UserRepository(
     /**
      * Поиск пользователя по параметрам
      */
+    fun findByIds(ids: List<Long>): Uni<List<UserEntity>> = entityManager.withSession { session ->
+        session.createQuery(
+            "select u from UserEntity u where id in (:ids)",
+            UserEntity::class.java
+        ).setParameter("ids", ids).resultList
+    }
+
+
+    /**
+     * Поиск пользователя по параметрам
+     */
+    fun findById(id: Long): Uni<UserEntity> = entityManager.withSession { session ->
+        session.createQuery(
+            "select u from UserEntity u where id = :id",
+            UserEntity::class.java
+        ).setParameter("id", id).singleResult
+    }
+
+    /**
+     * Поиск пользователя по параметрам
+     */
     fun findAllByDirection(direction: String, page: Page): Uni<List<UserEntity>> =
         entityManager.withSession { session ->
             session.createQuery(

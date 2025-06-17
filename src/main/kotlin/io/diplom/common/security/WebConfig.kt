@@ -35,6 +35,7 @@ class WebConfig(
             .authorized("/user/*")
             .authorized("/cart/*")
             .authorized("/work/*")
+            .authorized("/report/*")
             .authorized("/admin-api/*", roles = listOf(AuthorityName.ADMIN.name))
             .anyRequestPermitAll()
             .build()

@@ -5,21 +5,29 @@ import io.diplom.outer.images.FileOutput
 import io.diplom.outer.images.MinioService
 import io.diplom.outer.user.models.UserEntity
 import io.diplom.outer.user.repository.UserRepository
-import io.diplom.outer.user.repository.UserRepositoryPanache
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
-import org.hibernate.query.Page
 import org.hibernate.query.Page.page
 
 @WithTransaction
 @ApplicationScoped
 class UserFetchUsecase(
     private val repository: UserRepository,
-    private val userRepositoryPanache: UserRepositoryPanache,
     private val fileService: MinioService
 ) {
+
+
+    fun findById(id: Long): Uni<User> =
+        repository.findById(id)
+            .flatMap(this::getAvatar)
+            .map(UserEntity::toUser)
+
+    fun findByIds(ids: List<Long>): Uni<List<User>> =
+        repository.findByIds(ids)
+            .flatMap(this::getAvatar)
+            .map { it.map(UserEntity::toUser) }
 
 
     /**
@@ -37,7 +45,7 @@ class UserFetchUsecase(
 
     @Deprecated("дедлайн был ночь, я такое осуждаю.. стыдно")
     fun allUsersByDirection(direction: String): Uni<List<User>> =
-        repository.findAllByDirection(direction, Page.page(1000, 0))
+        repository.findAllByDirection(direction, page(1000, 0))
             .flatMap(this::getAvatar)
             .map { it.map(UserEntity::toUser) }
 
