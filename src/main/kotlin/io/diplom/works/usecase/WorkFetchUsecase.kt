@@ -2,17 +2,15 @@ package io.diplom.works.usecase
 
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.querymodel.jpql.entity.Entities.entity
+import io.diplom.auth.usecase.UserFetchUsecase
 import io.diplom.config.jpql.JpqlEntityManager
 import io.diplom.config.jpql.PaginationInput
-import io.diplom.exception.GeneralException
 import io.diplom.outer.images.FileOutput
 import io.diplom.outer.images.MinioService
 import io.diplom.works.models.WorkEntity
 import io.diplom.works.repository.WorkRepository
-import io.quarkus.hibernate.reactive.panache.common.WithSession
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
-import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -21,6 +19,7 @@ class WorkFetchUsecase(
     private val workRepository: WorkRepository,
     private val fileService: MinioService,
     private val jpqlEntityManager: JpqlEntityManager,
+    private val userFetchUsecase: UserFetchUsecase
 ) {
 
     companion object {
@@ -126,16 +125,26 @@ class WorkFetchUsecase(
 
     fun wrap(entity: List<WorkEntity>): Uni<List<WorkEntity>> {
 
+
+        val userMapUni = userFetchUsecase.findByIds(entity.mapNotNull(WorkEntity::userId))
+            .map {
+                it.associateBy { it.id }
+            }.map { userMap ->
+                entity.forEach { e ->
+                    e.user = userMap[e.userId!!]
+                }
+                entity
+            }
+
+
         val unis = entity.flatMap { it.images }.map { ph ->
             fileService.getObject(ph.filename!!).map {
                 ph.id!! to it
             }
         }
 
-        if (unis.isEmpty())
-            throw GeneralException("Список работ пустой")
 
-        return Uni.combine().all().unis<Pair<Long, FileOutput>>(unis)
+        val fillImagesUni = if (unis.isEmpty().not()) Uni.combine().all().unis<Pair<Long, FileOutput>>(unis)
             .with { (it as List<Pair<Long, FileOutput>>).toMap() }
             .map { maps ->
                 entity.forEach { e ->
@@ -147,6 +156,15 @@ class WorkFetchUsecase(
                 }
                 entity
             }
+        else null
+
+
+        val builder = Uni.join().builder<List<WorkEntity>>()
+
+        builder.add(userMapUni)
+        fillImagesUni?.let { builder.add(it) }
+
+        return builder.joinFirst().withItem()
     }
 
 }

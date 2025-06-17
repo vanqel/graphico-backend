@@ -4,6 +4,7 @@ import io.diplom.common.security.models.Authority
 import io.diplom.common.security.models.User
 import io.diplom.exception.AuthException
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntity
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
@@ -81,7 +82,7 @@ class UserEntity(
     @Column(name = "is_blocked")
     var isBlocked: Boolean = false,
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = [CascadeType.ALL])
     @JoinColumn(
         name = "id",
         referencedColumnName = "user_id"

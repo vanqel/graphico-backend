@@ -1,11 +1,13 @@
 package io.diplom.works.models
 
+import io.diplom.common.security.models.User
 import io.diplom.models.LongEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
@@ -23,7 +25,7 @@ class WorkEntity(
     @Column(name = "about", columnDefinition = "text")
     val about: String? = null,
 
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "work_id", referencedColumnName = "id")
     val images: MutableList<WorkPhotoEntity> = mutableListOf(),
 
@@ -46,6 +48,9 @@ class WorkEntity(
 
 
 ) : LongEntity() {
+
+    @Transient
+    var user: User? = null
 
     enum class Status(val text: String) {
         DONE("Готово"), IN_WORK("В работе"), CANCEL("Отменён")
