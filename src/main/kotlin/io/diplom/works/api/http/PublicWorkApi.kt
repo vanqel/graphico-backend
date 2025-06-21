@@ -16,9 +16,8 @@ class PublicWorkApi(
     private val workFetchUsecase: WorkFetchUsecase
 ) {
     @Route(
-        path = "work",
-        methods = [Route.HttpMethod.POST],
-        produces = [MediaType.APPLICATION_JSON]
+        path = "/search",
+        methods = [Route.HttpMethod.GET]
     )
     fun findWork(
         @Param("id") id: Long?,

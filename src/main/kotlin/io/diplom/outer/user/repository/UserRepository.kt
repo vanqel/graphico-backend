@@ -4,6 +4,7 @@ import io.diplom.outer.user.models.UserEntity
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
+import org.eclipse.microprofile.jwt.Claims
 import org.hibernate.query.Page
 import org.hibernate.reactive.mutiny.Mutiny
 
@@ -91,13 +92,42 @@ class UserRepository(
     fun checkExistsUsername(email: String?, username: String?): Uni<Boolean> =
         entityManager.withSession { session ->
             session.createQuery(
-                "select exists(select 1 u from UserEntity u where email = :email or username = :username)",
+                "select exists(select 1  from UserEntity u where email = :email or username = :username)",
                 Boolean::class.java
             ).setParameter("email", email)
                 .setParameter("username", username)
                 .singleResultOrNull
 
         }
+
+
+    /**
+     * Проверка на существование пользователя по параметрам
+     */
+    @WithTransaction
+    fun checkExistsUsername(username: String?): Uni<Boolean> =
+        entityManager.withSession { session ->
+            session.createQuery(
+                "select exists(select 1 from UserEntity u where username = :username)",
+                Boolean::class.java
+            ).setParameter("username", username)
+                .singleResultOrNull
+        }
+
+
+    /**
+     * Проверка на существование пользователя по параметрам
+     */
+    @WithTransaction
+    fun checkExistsEmail(email: String?): Uni<Boolean> =
+        entityManager.withSession { session ->
+            session.createQuery(
+                "select exists(select 1 from UserEntity u where email = :email)",
+                Boolean::class.java
+            ).setParameter("email", email)
+                .singleResultOrNull
+        }
+
 
     /**
      * Проверка на существование пользователя по параметрам

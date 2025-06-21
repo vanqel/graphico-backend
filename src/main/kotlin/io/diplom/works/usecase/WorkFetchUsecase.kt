@@ -5,12 +5,14 @@ import com.linecorp.kotlinjdsl.querymodel.jpql.entity.Entities.entity
 import io.diplom.auth.usecase.UserFetchUsecase
 import io.diplom.config.jpql.JpqlEntityManager
 import io.diplom.config.jpql.PaginationInput
+import io.diplom.exception.GeneralException
 import io.diplom.outer.images.FileOutput
 import io.diplom.outer.images.MinioService
 import io.diplom.works.models.WorkEntity
 import io.diplom.works.repository.WorkRepository
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
+import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -103,7 +105,11 @@ class WorkFetchUsecase(
             .flatMap(this::wrap)
     }
 
-    fun wrap(entity: WorkEntity): Uni<WorkEntity> {
+    fun wrap(entity: WorkEntity?): Uni<WorkEntity> {
+
+        entity ?: run {
+            return Uni.createFrom().failure(GeneralException("Не найдена сущность"))
+        }
 
         val unis = entity.images.map { ph ->
             fileService.getObject(ph.filename!!).map {
@@ -111,7 +117,9 @@ class WorkFetchUsecase(
             }
         }
 
-        return Uni.combine().all().unis<Pair<Long, FileOutput>>(unis)
+
+        return if (unis.isEmpty()) uni { entity }
+        else Uni.combine().all().unis<Pair<Long, FileOutput>>(unis)
             .with { (it as List<Pair<Long, FileOutput>>).toMap() }
             .map { maps ->
                 entity.images.forEach {
