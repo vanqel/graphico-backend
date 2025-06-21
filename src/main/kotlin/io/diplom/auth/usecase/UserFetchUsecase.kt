@@ -4,6 +4,7 @@ import io.diplom.common.security.models.User
 import io.diplom.outer.images.FileOutput
 import io.diplom.outer.images.MinioService
 import io.diplom.outer.user.models.UserEntity
+import io.diplom.outer.user.repository.UserPhotoRepositoryPanache
 import io.diplom.outer.user.repository.UserRepository
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
@@ -15,7 +16,8 @@ import org.hibernate.query.Page.page
 @ApplicationScoped
 class UserFetchUsecase(
     private val repository: UserRepository,
-    private val fileService: MinioService
+    private val fileService: MinioService,
+    private val phRepository: UserPhotoRepositoryPanache
 ) {
 
 
@@ -55,11 +57,11 @@ class UserFetchUsecase(
     fun getAvatar(user: UserEntity): Uni<UserEntity> {
 
         val ph = user.avatar?.let {
-            fileService.getObject(it.filename!!)
+            fileService.getObject(it.first().filename!!)
         } ?: uni { FileOutput.empty() }
 
         return ph.map {
-            user.avatar?.uri = it.uri
+            user.avatar?.first()?.uri = it.uri
             user
         }
     }
@@ -68,11 +70,11 @@ class UserFetchUsecase(
     fun getAvatar(users: List<UserEntity>): Uni<List<UserEntity>> {
         val unis = users.map { user ->
             val ph = user.avatar?.let {
-                fileService.getObject(it.filename!!)
+                fileService.getObject(it.first().filename!!)
             } ?: uni { FileOutput.empty() }
 
             ph.map {
-                user.avatar?.uri = it.uri
+                user.avatar?.first()?.uri = it.uri
                 user
             }
         }

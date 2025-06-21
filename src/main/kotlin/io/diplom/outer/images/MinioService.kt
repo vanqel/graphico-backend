@@ -32,6 +32,21 @@ class MinioService(
     }
 
 
+    fun <T> getObject(key: T, name: String): Uni<Pair<T,FileOutput>> {
+        return client.getUri(
+            GetPresignedObjectUrlArgs.builder()
+                .method(Method.GET)
+                .bucket(bucketName)
+                .`object`(name)
+                .expiry(1, TimeUnit.HOURS)
+                .build()
+        ).map {
+            key to FileOutput(it, name)
+        }
+    }
+
+
+
     fun delObject(name: String): Uni<Void> {
         return client.remObject(
             RemoveObjectArgs.builder()

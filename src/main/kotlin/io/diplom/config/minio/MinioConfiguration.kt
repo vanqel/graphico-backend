@@ -3,6 +3,7 @@ package io.diplom.config.minio
 import io.minio.BucketExistsArgs
 import io.minio.MakeBucketArgs
 import io.minio.MinioAsyncClient
+import io.quarkus.runtime.Startup
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.uni
 import io.vertx.core.impl.logging.Logger
@@ -42,15 +43,15 @@ class MinioConfiguration(
                 Uni.createFrom().future(minioClient.makeBucket(MakeBucketArgs.builder().bucket(name).build()))
             } else {
                 logger.info("Bucket $name validated")
-                Uni.createFrom().nothing()
+                Uni.createFrom().nullItem()
             }
         }
     }
 
-    //    @Startup
+        @Startup
     @Suppress("unused")
     fun start() {
-        uni {  createIfNotExists(DOCS) }.await().indefinitely()
+         createIfNotExists(DOCS)?.await()?.indefinitely()
     }
 
     companion object {

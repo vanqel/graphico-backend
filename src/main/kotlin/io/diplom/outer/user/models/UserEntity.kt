@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
+import org.eclipse.microprofile.jwt.Claims
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.time.LocalDateTime
@@ -76,20 +77,22 @@ class UserEntity(
     @Column(name = "is_approved")
     var isApproved: Boolean = false,
 
+
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
+    @Fetch(value = FetchMode.JOIN)
+    @JoinColumn(name = "uid_id", referencedColumnName = "id")
+    val avatar: List<UserPhotos>? = null,
+
     /**
      * Признак блокировки пользователя
      */
     @Column(name = "is_blocked")
     var isBlocked: Boolean = false,
 
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = [CascadeType.ALL])
-    @JoinColumn(
-        name = "id",
-        referencedColumnName = "user_id"
-    )
-    var avatar: UserPhotos? = null
 
 ) : PanacheEntity() {
+
+
 
     /**
      * Роли пользователя
@@ -114,8 +117,8 @@ class UserEntity(
             directions = directions,
             isApproved = isApproved,
             isBlocked = isBlocked,
-            photoFileName = avatar?.filename,
-            photoUri = avatar?.uri
+            photoFileName = avatar?.firstOrNull()?.filename,
+            photoUri = avatar?.firstOrNull()?.uri
         )
     }
 
@@ -134,7 +137,7 @@ class UserEntity(
             directions = directions,
             isApproved = isApproved,
             isBlocked = isBlocked,
-            photoFileName = avatar?.filename,
+            photoFileName = avatar?.firstOrNull()?.filename,
             photoUri = uri
         )
     }

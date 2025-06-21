@@ -73,8 +73,11 @@ class UserUpdateUsecase(
 
     fun updateAvatarUser(file: FileUpload): Uni<FileOutput> {
         return fileService.addObject(file).call { s ->
-            val e = UserPhotos(securityIdentity.getUser().id, s.filename)
-            userPhotoRepository.persistAndFlush(e)
+
+//            userRepository.findById(securityIdentity.getUser().id).flatMap {
+                val e = UserPhotos(securityIdentity.getUser().id, s.filename)
+                userPhotoRepository.persistAndFlush(e)
+//            }
         }
     }
 

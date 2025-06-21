@@ -21,7 +21,8 @@ import jakarta.enterprise.context.ApplicationScoped
 class UserAuthUsecase(
     private val jwtProvider: JwtProvider,
     private val repository: UserRepository,
-    private val fileService: MinioService
+    private val fileService: MinioService,
+    private val userFetchUsecase: UserFetchUsecase
 ) {
 
     /**
@@ -40,7 +41,7 @@ class UserAuthUsecase(
             val user = requireNotNull(it.user)
 
             val ph = user.avatar?.let {
-                fileService.getObject(it.filename!!)
+                fileService.getObject(it.first().filename!!)
             } ?: uni { FileOutput.empty() }
 
             ph.map {
