@@ -69,8 +69,11 @@ class UserFetchUsecase(
 
     fun getAvatar(users: List<UserEntity>): Uni<List<UserEntity>> {
         val unis = users.map { user ->
+
             val ph = user.avatar?.let {
-                fileService.getObject(it.last().filename!!)
+                it.lastOrNull()?.let { it ->
+                    fileService.getObject(it.filename!!)
+                }
             } ?: uni { FileOutput.empty() }
 
             ph.map {

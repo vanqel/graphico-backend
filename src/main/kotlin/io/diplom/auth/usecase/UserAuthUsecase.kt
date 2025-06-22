@@ -41,7 +41,9 @@ class UserAuthUsecase(
             val user = requireNotNull(it.user)
 
             val ph = user.avatar?.let {
-                fileService.getObject(it.last().filename!!)
+                 it.lastOrNull()?.let { it ->
+                    fileService.getObject(it.filename!!)
+                }
             } ?: uni { FileOutput.empty() }
 
             ph.map {

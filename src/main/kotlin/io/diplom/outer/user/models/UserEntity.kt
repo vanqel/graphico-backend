@@ -122,7 +122,7 @@ class UserEntity(
         )
     }
 
-    fun toUser(uri: String, validate: Boolean = true): User {
+    fun toUser(uri: String?, validate: Boolean = true): User {
 
         if (validate && (isBlocked || !isApproved)) throw AuthException("Вход не возможен")
 

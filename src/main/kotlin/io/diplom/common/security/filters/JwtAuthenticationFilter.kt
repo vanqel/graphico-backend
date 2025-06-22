@@ -54,10 +54,12 @@ class JwtAuthenticationFilter(
             signature == null ||
             payload.getLong("exp") < System.currentTimeMillis() / 1000
         ) Uni.createFrom().failure(AuthException())
-
         else Uni.createFrom().item(payload.getString("username"))
     }.flatMap {
         jwtProvider.loginByUsername(it, context)
-    }
+    }.onFailure {
+        it.printStackTrace()
+        true
+    }.recoverWithNull()
 
 }
