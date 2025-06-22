@@ -164,15 +164,13 @@ class WorkFetchUsecase(
                 }
                 entity
             }
-        else null
+        else uni { emptyList() }
 
 
-        val builder = Uni.join().builder<List<WorkEntity>>()
+        return userMapUni.call { e ->
+            fillImagesUni
+        }
 
-        builder.add(userMapUni)
-        fillImagesUni?.let { builder.add(it) }
-
-        return builder.joinFirst().withItem()
     }
 
 }

@@ -77,7 +77,7 @@ class UserFetchUsecase(
             } ?: uni { FileOutput.empty() }
 
             ph.map {
-                user.avatar?.last()?.uri = it.uri
+                user.avatar?.lastOrNull()?.uri = it.uri
                 user
             }
         }
