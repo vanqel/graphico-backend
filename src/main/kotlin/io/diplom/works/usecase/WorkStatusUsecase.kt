@@ -23,7 +23,7 @@ class WorkStatusUsecase(
     fun changeStatus(input: ChangeStatusWorkDTO): Uni<WorkEntity> {
         val user = securityIdentity.getUser()
         return fetchUsecase.findById(input.id).flatMap {
-            if (it.userId != user.id || !user.hasAuthority(AuthorityName.ADMIN))
+            if (it.userId!! != user.id && !user.hasAuthority(AuthorityName.ADMIN))
                 Uni.createFrom().failure(AuthException())
             else uni {
                 it.status = input.status

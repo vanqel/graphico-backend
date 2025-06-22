@@ -47,7 +47,7 @@ class WorkCreateUsecase(
         val user = securityIdentity.getUser()
 
         return entity.flatMap {
-            if (it.userId != user.id || !user.hasAuthority(AuthorityName.ADMIN))
+            if (it.userId != user.id && !user.hasAuthority(AuthorityName.ADMIN))
                 Uni.createFrom().failure(AuthException())
             else uni { it }
         }.flatMap { workEntity ->
