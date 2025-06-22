@@ -76,12 +76,13 @@ class WorkCreateUsecase(
                     val unis = list.map {
                         jpqlEntityManager.save(it).map {
                             it.uri = filenameToUri[it.filename]
+                            it
                         }
                     }
 
                     Uni.combine()
                         .all()
-                        .unis<FileOutput>(unis)
+                        .unis<WorkPhotoEntity>(unis)
                         .with { it as List<WorkPhotoEntity> }
                 }.flatMap {
 
