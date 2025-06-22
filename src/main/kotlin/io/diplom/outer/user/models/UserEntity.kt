@@ -117,8 +117,8 @@ class UserEntity(
             directions = directions,
             isApproved = isApproved,
             isBlocked = isBlocked,
-            photoFileName = avatar?.firstOrNull()?.filename,
-            photoUri = avatar?.firstOrNull()?.uri
+            photoFileName = avatar?.lastOrNull()?.filename,
+            photoUri = avatar?.lastOrNull()?.uri
         )
     }
 

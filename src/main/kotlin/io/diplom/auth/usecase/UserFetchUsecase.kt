@@ -29,7 +29,7 @@ class UserFetchUsecase(
     fun findByIds(ids: List<Long>): Uni<List<User>> =
         repository.findByIds(ids)
             .flatMap(this::getAvatar)
-            .map { it.map(UserEntity::toUser) }
+            .map { it.mapNotNull { it.toUser(false) } }
 
 
     /**
