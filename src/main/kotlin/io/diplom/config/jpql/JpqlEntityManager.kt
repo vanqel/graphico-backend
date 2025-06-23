@@ -67,6 +67,11 @@ final class JpqlEntityManager(
             return getResultDataRef(rendered, pagination)
         }
 
+        inline fun <reified T : Any> getSingleResult(query: SelectQuery<T>): Uni<T?> {
+            val rendered = render.render(query, context)
+            return getSingleResultDataRef(rendered)
+        }
+
         /**
          * Получение потока данных с помощью динамически сконструированного запроса
          */
@@ -84,6 +89,25 @@ final class JpqlEntityManager(
                     .pagination(pagination)
                     .resultList
             }.map { it.filterNotNull() }
+
+        }
+
+
+        /**
+         * Получение потока данных с помощью динамически сконструированного запроса
+         */
+        inline fun <reified T : Any> getSingleResultDataRef(
+            render: JpqlRendered,
+        ): Uni<T?> {
+            return entityManager.withSession { s ->
+                val callableQuery = s.createQuery(
+                    render.query, T::class.java
+                )
+
+                callableQuery
+                    .apply { render.params.forEach { (name, value) -> setParameter(name, value) } }
+                    .singleResultOrNull
+            }
 
         }
 
