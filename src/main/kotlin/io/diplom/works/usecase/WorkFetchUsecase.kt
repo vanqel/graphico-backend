@@ -111,6 +111,12 @@ class WorkFetchUsecase(
             return Uni.createFrom().failure(GeneralException("Не найдена сущность"))
         }
 
+        val userMapUni = userFetchUsecase.findById(entity.userId!!)
+            .map { u ->
+                entity.user = u
+                entity
+            }
+
         val unis = entity.images.map { ph ->
             fileService.getObject(ph.filename!!).map {
                 ph.id!! to it
@@ -118,7 +124,7 @@ class WorkFetchUsecase(
         }
 
 
-        return if (unis.isEmpty()) uni { entity }
+        return if (unis.isEmpty()) userMapUni
         else Uni.combine().all().unis<Pair<Long, FileOutput>>(unis)
             .with { (it as List<Pair<Long, FileOutput>>).toMap() }
             .map { maps ->
@@ -128,10 +134,12 @@ class WorkFetchUsecase(
                     }
                 }
                 entity
+            }.flatMap {
+                userMapUni
             }
     }
 
-    fun wrap(entity: List<WorkEntity>): Uni<List<WorkEntity>> {
+    fun wrap(entity: List<WorkEntity>, fillUser: Boolean = true): Uni<List<WorkEntity>> {
 
 
         val userMapUni = userFetchUsecase.findByIds(entity.mapNotNull(WorkEntity::userId))
@@ -164,7 +172,7 @@ class WorkFetchUsecase(
                 }
                 entity
             }
-        else uni { emptyList() }
+        else uni { entity }
 
 
         return userMapUni.call { e ->

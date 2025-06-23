@@ -33,8 +33,8 @@ class CartApi(
     ): Uni<CartEntity> = cartAddUsecase.add(input)
 
     @Route(
+        path = "remove",
         methods = [Route.HttpMethod.DELETE],
-        produces = [MediaType.APPLICATION_JSON]
     )
     fun remove(
         @Param id: Long?
@@ -43,8 +43,7 @@ class CartApi(
     @Deprecated("лютый хард код, осуждаю.. стыдно")
     @Route(
         path = "success",
-        methods = [Route.HttpMethod.DELETE],
-        produces = [MediaType.APPLICATION_JSON]
+        methods = [Route.HttpMethod.POST],
     )
     fun buy(
         @Param id: Long?
@@ -53,22 +52,21 @@ class CartApi(
     @Deprecated("лютый хард код, осуждаю.. стыдно")
     @Route(
         path = "decline",
-        methods = [Route.HttpMethod.DELETE],
-        produces = [MediaType.APPLICATION_JSON]
+        methods = [Route.HttpMethod.POST],
     )
     fun decline(
         @Param id: Long?
     ): Uni<List<CartEntity>> = cartPaymentUsecase.decline(id!!)
 
     @Route(
+        path = "wait-payment",
         methods = [Route.HttpMethod.GET],
-        produces = [MediaType.APPLICATION_JSON]
     )
     fun getCart(): Uni<List<CartEntity>> = cartFetchUsecase.findForUserCart()
 
     @Route(
+        path = "owned",
         methods = [Route.HttpMethod.GET],
-        produces = [MediaType.APPLICATION_JSON]
     )
     fun getBuy(): Uni<List<WorkEntity>> = cartFetchUsecase.findForUserBuy()
 }

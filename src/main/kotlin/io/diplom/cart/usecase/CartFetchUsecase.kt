@@ -11,6 +11,7 @@ import io.diplom.works.usecase.WorkFetchUsecase
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.quarkus.security.identity.SecurityIdentity
 import io.smallrye.mutiny.Uni
+import io.smallrye.mutiny.uni
 import jakarta.enterprise.context.ApplicationScoped
 
 @WithTransaction
@@ -34,7 +35,7 @@ class CartFetchUsecase(
                         .eq(securityIdentity.getUser().id),
 
                     entity.path(CartEntity::status)
-                        .eq(CartEntity.Status.IN_CART)
+                        .`in`(CartEntity.Status.IN_CART, CartEntity.Status.DECLINE)
                 )
         }
 
@@ -52,14 +53,17 @@ class CartFetchUsecase(
                         .eq(securityIdentity.getUser().id),
 
                     entity.path(CartEntity::status)
-                        .eq(CartEntity.Status.PAYMENT)
+                        .eq(value(CartEntity.Status.PAYMENT))
                 )
         }
 
         return jpqlEntityManager.JpqlQuery()
             .getResultData(query, PaginationInput(0, 20))
             .flatMap {
-                val ids = it.map(CartEntity::workId)
+                val ids = it.map(CartEntity::workId).ifEmpty {
+                    return@flatMap uni { emptyList() }
+                }
+
                 workFetchUsecase.findByIds(ids.filterNotNull())
             }
     }

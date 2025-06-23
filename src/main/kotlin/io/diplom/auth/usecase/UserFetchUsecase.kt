@@ -4,7 +4,6 @@ import io.diplom.common.security.models.User
 import io.diplom.outer.images.FileOutput
 import io.diplom.outer.images.MinioService
 import io.diplom.outer.user.models.UserEntity
-import io.diplom.outer.user.repository.UserPhotoRepositoryPanache
 import io.diplom.outer.user.repository.UserRepository
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
@@ -17,7 +16,6 @@ import org.hibernate.query.Page.page
 class UserFetchUsecase(
     private val repository: UserRepository,
     private val fileService: MinioService,
-    private val phRepository: UserPhotoRepositoryPanache
 ) {
 
 
@@ -80,7 +78,7 @@ class UserFetchUsecase(
                 user.avatar?.lastOrNull()?.uri = it.uri
                 user
             }
-        }
+        }.ifEmpty { return uni { emptyList() } }
         return Uni.combine().all().unis<UserEntity>(unis).with { it as List<UserEntity> }
     }
 }

@@ -7,4 +7,5 @@ data class ReportOutput (
     val author: User,
     val workId: Long,
     val text: String,
+    val rate: Int
 )

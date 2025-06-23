@@ -17,7 +17,6 @@ import jakarta.ws.rs.core.MediaType
 @ApplicationScoped
 class ReportApi(
     val reportAddUsecase: ReportAddUsecase,
-    val reportFetchUsecase: ReportFetchUsecase,
     val reportRemoveUsecase: ReportRemoveUsecase
 ) {
 
@@ -30,19 +29,12 @@ class ReportApi(
     ): Uni<ReportOutput> = reportAddUsecase.add(input)
 
     @Route(
+        path = "remove",
         methods = [Route.HttpMethod.DELETE],
         produces = [MediaType.APPLICATION_JSON]
     )
     fun remove(
         @Param id: Long?
     ): Uni<Boolean> = reportRemoveUsecase.delete(id!!)
-
-    @Route(
-        methods = [Route.HttpMethod.GET],
-        produces = [MediaType.APPLICATION_JSON]
-    )
-    fun getCart(
-        @Param workId: Long?
-    ): Uni<List<ReportOutput>> = reportFetchUsecase.findForWork(workId!!)
 
 }

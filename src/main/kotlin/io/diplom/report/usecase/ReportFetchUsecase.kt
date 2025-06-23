@@ -17,7 +17,6 @@ import jakarta.enterprise.context.ApplicationScoped
 @WithTransaction
 @ApplicationScoped
 class ReportFetchUsecase(
-    private val securityIdentity: SecurityIdentity,
     private val jpqlEntityManager: JpqlEntityManager,
     private val userFetchUsecase: UserFetchUsecase
 ) {
@@ -33,9 +32,6 @@ class ReportFetchUsecase(
             selectDistinct(entity)
                 .from(entity)
                 .whereAnd(
-                    entity.path(ReportEntity::userId)
-                        .eq(securityIdentity.getUser().id),
-
                     entity.path(ReportEntity::workId)
                         .eq(workId)
                 )
@@ -53,7 +49,8 @@ class ReportFetchUsecase(
                 e.id!!,
                 u,
                 e.workId!!,
-                e.text!!
+                e.text!!,
+                e.rate!!
             )
         }
 
@@ -71,7 +68,8 @@ class ReportFetchUsecase(
                             reportEntity.id!!,
                             user,
                             reportEntity.workId!!,
-                            reportEntity.text!!
+                            reportEntity.text!!,
+                            reportEntity.rate!!
                         )
                     }
                 }
