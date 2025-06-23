@@ -54,12 +54,12 @@ class UserFetchUsecase(
 
     fun getAvatar(user: UserEntity): Uni<UserEntity> {
 
-        val ph = user.avatar?.let {
-            fileService.getObject(it.last().filename!!)
+        val ph = user.avatar?.lastOrNull()?.let {
+            fileService.getObject(it.filename!!)
         } ?: uni { FileOutput.empty() }
 
         return ph.map {
-            user.avatar?.last()?.uri = it.uri
+            user.avatar?.lastOrNull()?.uri = it.uri
             user
         }
     }
@@ -68,10 +68,8 @@ class UserFetchUsecase(
     fun getAvatar(users: List<UserEntity>): Uni<List<UserEntity>> {
         val unis = users.map { user ->
 
-            val ph = user.avatar?.let {
-                it.lastOrNull()?.let { it ->
+            val ph = user.avatar?.lastOrNull()?.let {
                     fileService.getObject(it.filename!!)
-                }
             } ?: uni { FileOutput.empty() }
 
             ph.map {
@@ -79,6 +77,7 @@ class UserFetchUsecase(
                 user
             }
         }.ifEmpty { return uni { emptyList() } }
+
         return Uni.combine().all().unis<UserEntity>(unis).with { it as List<UserEntity> }
     }
 }
